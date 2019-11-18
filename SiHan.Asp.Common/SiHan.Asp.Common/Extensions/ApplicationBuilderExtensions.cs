@@ -59,15 +59,14 @@ namespace SiHan.Asp.Common.Extensions
         /// <summary>
         /// 为静态文件添加缓存
         /// </summary>
-        public static void UseStaticFilesWithCache(this IApplicationBuilder app)
+        public static void UseStaticFilesWithCache(this IApplicationBuilder app,int cacheSeconds = 604800)
         {
             //https://andrewlock.net/adding-cache-control-headers-to-static-files-in-asp-net-core/
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
                 {
-                    const int durationInSeconds = 60 * 60 * 24;
-                    ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + durationInSeconds;
+                    ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=" + cacheSeconds;
                 }
             });
         }
