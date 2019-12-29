@@ -7,7 +7,7 @@ namespace SiHan.Asp.Common.Attributes
     /// <summary>
     /// 备注说明特性（用于代码生成器）
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
     public class RemarkAttribute : Attribute
     {
         /// <summary>
