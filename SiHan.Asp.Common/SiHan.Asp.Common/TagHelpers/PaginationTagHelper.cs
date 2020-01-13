@@ -24,11 +24,19 @@ namespace SiHan.Asp.Common.TagHelpers
         private int CurrentPage { get; set; }
         private Pager _pager { get; set; }
 
-        [ViewContext] [HtmlAttributeNotBound] public ViewContext ViewContext { get; set; }
+        [ViewContext]
+        [HtmlAttributeNotBound]
+        public ViewContext ViewContext { get; set; }
 
-        [HtmlAttributeName("for_page_size")] public int PageSize { get; set; } = 10;
+        [HtmlAttributeName("for_page_size")]
+        public int PageSize { get; set; } = 10;
 
-        [HtmlAttributeName("for_row_count")] public long RowCount { get; set; } = 0;
+        [HtmlAttributeName("for_row_count")]
+        public long RowCount { get; set; } = 0;
+
+        [HtmlAttributeName("for_align")]
+        public PageAlign Align { get; set; } = PageAlign.left;
+        
 
         public PaginationTagHelper(IHttpContextAccessor httpContextAccessor, IActionContextAccessor actionContextAccessor, IUrlHelperFactory urlHelperFactory)
         {
@@ -74,7 +82,18 @@ namespace SiHan.Asp.Common.TagHelpers
             this.CurrentPage = ParseCurrentPage(this.ViewContext.HttpContext);
             this._pager = new Pager(this.RowCount, this.CurrentPage, this.PageSize);
             output.TagName = "ul"; // 覆盖标签pager为ul
-            output.Attributes.Add("class", "pagination"); //添加bs4样式
+            // 添加css样式
+            List<string> cssList = new List<string>();
+            cssList.Add("pagination");
+            if (this.Align == PageAlign.center)
+            {
+                cssList.Add("justify-content-center");
+            }
+            if (this.Align == PageAlign.right)
+            {
+                cssList.Add("justify-content-end");
+            }
+            output.Attributes.Add("class", string.Join(" ",cssList.ToArray())); //添加bs4样式
             BuildFirstPageLink(output);
             BuildPreviousPage(output);
             BuildNumPageLink(output);
@@ -222,6 +241,25 @@ namespace SiHan.Asp.Common.TagHelpers
             }
 
             return url;
+        }
+
+        /// <summary>
+        /// 分页位置
+        /// </summary>
+        public enum PageAlign
+        {
+            /// <summary>
+            /// 左边
+            /// </summary>
+            left,
+            /// <summary>
+            /// 居中
+            /// </summary>
+            center,
+            /// <summary>
+            /// 右边
+            /// </summary>
+            right
         }
     }
 }
